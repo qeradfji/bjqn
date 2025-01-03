@@ -1,0 +1,34 @@
+server:
+  port: 8080  # 配置应用运行的端口号为8080
+
+spring:
+  mvc:
+    static-path-pattern: /**  # 配置静态资源路径模式
+    pathmatch:
+      matching-strategy: ant_path_matcher  # 配置路径匹配策略为ant_path_matcher
+    throw-exception-if-no-handler-found: true  # 如果没有找到处理器则抛出异常
+  web:
+    resources:
+      static-locations: classpath:/static/  # 配置静态资源的位置
+      add-mappings: false  # 是否添加默认的静态资源映射
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver  # 配置数据库驱动类
+    url: jdbc:mysql://localhost:3306/bjqn_edu?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai  # 配置数据库连接URL
+    username: root  # 配置数据库用户名
+    password: root  # 配置数据库密码
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss  # 配置Jackson日期格式
+    time-zone: GMT+8  # 配置Jackson时区
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml  # 配置MyBatis-Plus的Mapper XML文件位置
+  type-aliases-package: com.bjqn.entity  # 配置MyBatis-Plus的类型别名包路径
+  configuration:
+    map-underscore-to-camel-case: true  # 配置MyBatis-Plus是否将下划线命名转换为驼峰命名
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 配置MyBatis-Plus的日志实现类
+  global-config:
+    db-config:
+      logic-delete-field: deleted  # 配置逻辑删除字段名
+      logic-delete-value: 1  # 配置逻辑删除值
+      logic-not-delete-value: 0  # 配置逻辑未删除值
