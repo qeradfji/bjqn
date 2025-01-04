@@ -1,6 +1,9 @@
 package com.baqn.util;
 
+import com.baqn.pojo.SysStudentDisciplinary;
+
 import java.util.HashMap;
+import java.util.List;
 
 public class R extends HashMap<String, Object> {
     private static final long serialVersionUID = 1L;
@@ -53,4 +56,6 @@ public class R extends HashMap<String, Object> {
         }
         return null;
     }
+
+
 }

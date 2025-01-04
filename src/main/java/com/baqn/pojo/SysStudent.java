@@ -104,5 +104,11 @@ public class SysStudent implements Serializable {
     @ApiModelProperty(value = "现居地址")
     private String address;
 
+    @ApiModelProperty(value = "年龄")
+    private String age;
+
+    @ApiModelProperty(value = "班级")
+    private String classe;
+
 
 }
