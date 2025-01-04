@@ -4,6 +4,8 @@ import com.baqn.pojo.dto.LoginDTO;
 import com.baqn.response.UserResponse;
 import com.baqn.service.ISysUserService;
 import com.baqn.util.R;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,11 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/sys-user")
+@Api(tags = "用户管理")
 public class SysUserController {
 
   @Autowired
   private ISysUserService iSysUserService;
 
+  @ApiOperation("登录")
   @PostMapping("/login")
   public R login(@RequestBody LoginDTO loginDTO) {
     try {

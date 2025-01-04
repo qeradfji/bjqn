@@ -5,13 +5,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baqn.pojo.SysStudentDisciplinary;
 import com.baqn.service.ISysStudentDisciplinaryService;
 import com.baqn.util.R;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/sys-student-disciplinary")
+@Api(tags = "违纪表")
 public class SysStudentDisciplinaryController {
 
   private static final Logger logger = LoggerFactory.getLogger(SysStudentDisciplinaryController.class);
@@ -33,6 +33,7 @@ public class SysStudentDisciplinaryController {
   /**
    * 根据班主任姓名和其他条件进行分页查询违纪记录
    */
+  @ApiOperation("根据班主任姓名和其他条件进行分页查询违纪记录")
   @GetMapping("/page")
   public R pageQuery(
     @RequestParam(defaultValue = "1") Integer pageNum,
@@ -69,6 +70,63 @@ public class SysStudentDisciplinaryController {
     } catch (Exception e) {
       logger.error("查询失败", e);
       return R.error("查询失败");
+    }
+  }
+
+  /**
+   * 添加违纪记录
+   */
+  @ApiOperation("添加违纪记录")
+  @PostMapping("/add")
+  public R addDisciplinary(@RequestBody SysStudentDisciplinary sysStudentDisciplinary) {
+    try {
+      boolean result = iSysStudentDisciplinaryService.save(sysStudentDisciplinary);
+      if (result) {
+        return R.ok("添加成功");
+      } else {
+        return R.error("添加失败");
+      }
+    } catch (Exception e) {
+      logger.error("添加违纪记录失败", e);
+      return R.error("添加违纪记录失败");
+    }
+  }
+
+  /**
+   * 修改违纪记录
+   */
+  @ApiOperation("修改违纪记录")
+  @PutMapping("/update")
+  public R updateDisciplinary(@RequestBody SysStudentDisciplinary sysStudentDisciplinary) {
+    try {
+      boolean result = iSysStudentDisciplinaryService.updateById(sysStudentDisciplinary);
+      if (result) {
+        return R.ok("修改成功");
+      } else {
+        return R.error("修改失败");
+      }
+    } catch (Exception e) {
+      logger.error("修改违纪记录失败", e);
+      return R.error("修改违纪记录失败");
+    }
+  }
+
+  /**
+   * 删除违纪记录
+   */
+  @ApiOperation("删除违纪记录")
+  @DeleteMapping("/delete/{id}")
+  public R deleteDisciplinary(@PathVariable Integer id) {
+    try {
+      boolean result = iSysStudentDisciplinaryService.removeById(id);
+      if (result) {
+        return R.ok("删除成功");
+      } else {
+        return R.error("删除失败");
+      }
+    } catch (Exception e) {
+      logger.error("删除违纪记录失败", e);
+      return R.error("删除违纪记录失败");
     }
   }
 }

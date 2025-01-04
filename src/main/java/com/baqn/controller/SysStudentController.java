@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baqn.pojo.SysStudent;
 import com.baqn.service.ISysStudentService;
 import com.baqn.util.R;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,11 +20,13 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/sys-student")
+@Api("学员表")
 public class SysStudentController {
 
   @Autowired
   private ISysStudentService iSysStudentService;
 
+  @ApiOperation("分页查询")
   @GetMapping("/list")
   public R list(
     @RequestParam(defaultValue = "1") Long currentPage,
@@ -38,6 +43,7 @@ public class SysStudentController {
     }
   }
 
+  @ApiModelProperty("更新学员")
   @PutMapping("/update")
   public R update(@RequestBody SysStudent sysStudent) {
     try {
@@ -56,6 +62,7 @@ public class SysStudentController {
     }
   }
 
+  @ApiOperation("添加学员")
   @PostMapping("/add")
   public R add(@RequestBody SysStudent sysStudent) {
     try {
@@ -71,6 +78,7 @@ public class SysStudentController {
     }
   }
 
+  @ApiOperation("删除学员")
   @DeleteMapping("/delete/{studentId}")
   public R delete(@PathVariable Long studentId) {
     try {
@@ -89,6 +97,7 @@ public class SysStudentController {
     }
   }
 
+  @ApiOperation("分页查询根据班主任")
   @GetMapping("/list-by-headteacher")
   public R listByHeadteacher(
     @RequestParam(defaultValue = "1") Long currentPage,
