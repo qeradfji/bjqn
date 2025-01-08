@@ -59,6 +59,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     // 4. 返回用户名和角色信息
-    return new UserResponse(user.getUsername(), role , user.getRealName());
+    return new UserResponse(user.getUsername(), role , user.getRealName() , user.getUserId());
   }
 }

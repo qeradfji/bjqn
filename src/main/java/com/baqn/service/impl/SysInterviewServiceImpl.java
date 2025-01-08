@@ -1,20 +1,19 @@
 package com.baqn.service.impl;
 
-import com.baqn.pojo.SysInterview;
 import com.baqn.mapper.SysInterviewMapper;
+import com.baqn.mapper.SysStudentMapper;
+import com.baqn.pojo.SysInterview;
+import com.baqn.pojo.SysStudent;
 import com.baqn.service.ISysInterviewService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.baqn.util.R;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -31,36 +30,87 @@ public class SysInterviewServiceImpl extends ServiceImpl<SysInterviewMapper, Sys
   @Autowired
   private SysInterviewMapper sysInterviewMapper;
 
+  @Autowired
+  private SysStudentMapper sysStudentMapper;
 
-  /**
-   * 查询没有访谈的学生
-   *
-   * @param name
-   * @param queryType
-   */
   @Override
-  public List<Map<String, Object>> getStudentsWithoutInterview(String name, String queryType) {
-    log.info("Received name: {}, queryType: {}", name, queryType);
-    // 获取没有访谈记录的学生ID列表
-    List<Long> studentIds = baseMapper.selectStudentsWithoutInterview();
+  public List<Map<String, Object>> getStudentsWithoutInterview(String name, String classId, Long teacherId) {
+    // 使用 MyBatis-Plus 的 QueryWrapper 构造查询条件
+    QueryWrapper<SysInterview> interviewWrapper = new QueryWrapper<>();
+    interviewWrapper.isNull("student_id");
 
-    // 根据查询条件过滤学生
-    if (name != null && !name.isEmpty()) {
-      if ("name".equals(queryType)) {
-        log.info("Executing selectStudentsByNameAndIds with name: {}", name);
-        return sysInterviewMapper.selectStudentsByNameAndIds(name, studentIds);
-      } else {
-        // 其他查询类型逻辑
-        log.info("Unknown queryType: {}", queryType);
-        return Collections.emptyList();
-      }
-    } else {
-      // 如果没有查询条件，直接返回学生ID列表
-      log.info("No query conditions provided, returning students by IDs");
-      return sysInterviewMapper.selectStudentsByIds(studentIds);
+    // 获取没有访谈记录的学生 ID 列表
+    List<Long> studentIds = sysInterviewMapper.selectObjs(interviewWrapper)
+      .stream()
+      .map(obj -> (Long) obj)
+      .collect(Collectors.toList());
+
+    // 构建学生查询条件
+    QueryWrapper<SysStudent> studentWrapper = new QueryWrapper<>();
+    // 检查 studentIds 是否为空，如果不为空则添加 notIn 条件
+    if (!studentIds.isEmpty()) {
+      studentWrapper.notIn("student_id", studentIds);
     }
+    if (name != null && !name.isEmpty()) {
+      studentWrapper.like("name", name);
+    }
+    if (classId != null && !classId.isEmpty()) {
+      studentWrapper.eq("class_id", classId);
+    }
+
+    // 获取符合条件的学生列表
+    List<SysStudent> students = sysStudentMapper.selectList(studentWrapper);
+
+    // 构建根据 teacherId 查询的条件
+    QueryWrapper<SysInterview> teacherInterviewWrapper = new QueryWrapper<>();
+    teacherInterviewWrapper.eq("teacher_id", teacherId);
+
+    // 获取属于特定教师的访谈记录
+    List<SysInterview> teacherInterviews = sysInterviewMapper.selectList(teacherInterviewWrapper);
+
+    // 获取属于特定教师的学生 ID 列表
+    List<Long> teacherStudentIds = teacherInterviews.stream()
+      .map(SysInterview::getStudentId)
+      .filter(Objects::nonNull)
+      .collect(Collectors.toList());
+
+    // 进一步筛选出属于特定教师的学生
+    List<SysStudent> filteredStudents = students.stream()
+      .filter(student -> teacherStudentIds.isEmpty() || teacherStudentIds.contains(student.getStudentId()))
+      .collect(Collectors.toList());
+
+    // 构建结果
+    List<Map<String, Object>> result = filteredStudents.stream().map(student -> {
+      Map<String, Object> studentInfo = new HashMap<>();
+      studentInfo.put("studentId", student.getStudentId());
+      studentInfo.put("studentName", student.getName());
+      // 添加其他需要的字段
+      // 查找该学生的访谈记录
+      SysInterview interview = teacherInterviews.stream()
+        .filter(intv -> Objects.equals(intv.getStudentId(), student.getStudentId()))
+        .findFirst()
+        .orElse(null);
+
+      if (interview != null) {
+        studentInfo.put("interviewDate", interview.getInterviewDate());
+        studentInfo.put("interviewType", interview.getInterviewType());
+        studentInfo.put("content", interview.getContent());
+        studentInfo.put("feedback", interview.getFeedback());
+        studentInfo.put("status", interview.getStatus());
+        studentInfo.put("createBy", interview.getCreateBy());
+        studentInfo.put("createTime", interview.getCreateTime());
+      }
+
+      return studentInfo;
+    }).collect(Collectors.toList());
+
+    return result;
   }
 
-
-
+  @Override
+  public boolean updateInterview(SysInterview sysInterview) {
+    // 设置 update_time 为当前时间
+    sysInterview.setUpdateTime(LocalDateTime.now());
+    return sysInterviewMapper.updateById(sysInterview) > 0;
+  }
 }

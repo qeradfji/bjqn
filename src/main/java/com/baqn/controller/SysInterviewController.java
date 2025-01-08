@@ -34,22 +34,17 @@ public class SysInterviewController {
   @Autowired
   private ISysStudentService iStudentService;
 
-  /**
-   * 查询没有访谈的学生，支持多条件查询
-   */
   @ApiOperation("查询没有访谈的学生，支持多条件查询")
   @GetMapping("/students-without-interview")
-  public R getStudentsWithoutInterview(@RequestParam(required = false) String name,
-                                       @RequestParam(required = false) String queryType) {
+  public R getStudentsWithoutInterview(@RequestParam(required = false) String name, @RequestParam(required = false) String classId, @RequestParam(required = false) Long teacherId) {
     try {
-      List<Map<String, Object>> students = iSysInterviewService.getStudentsWithoutInterview(name, queryType);
+      List<Map<String, Object>> students = iSysInterviewService.getStudentsWithoutInterview(name, classId, teacherId);
       return R.ok().put("students", students);
     } catch (Exception e) {
       logger.error("查询没有访谈的学生失败", e);
       return R.error("查询没有访谈的学生失败");
     }
   }
-
 
   /**
    * 删除访谈记录
@@ -89,4 +84,22 @@ public class SysInterviewController {
     }
   }
 
+  /**
+   * 修改访谈记录
+   */
+  @ApiOperation("修改访谈记录")
+  @PutMapping("/update")
+  public R updateInterview(@RequestBody SysInterview sysInterview) {
+    try {
+      boolean result = iSysInterviewService.updateInterview(sysInterview);
+      if (result) {
+        return R.ok("修改成功");
+      } else {
+        return R.error("修改失败");
+      }
+    } catch (Exception e) {
+      logger.error("修改访谈记录失败", e);
+      return R.error("修改访谈记录失败");
+    }
+  }
 }
