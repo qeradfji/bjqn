@@ -4,9 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baqn.mapper.SysStudentMapper;
+import com.baqn.pojo.SysInterview;
 import com.baqn.pojo.SysStudent;
 import com.baqn.service.ISysStudentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -18,6 +25,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SysStudentServiceImpl extends ServiceImpl<SysStudentMapper, SysStudent> implements ISysStudentService {
+
+  @Autowired
+  private SysStudentMapper studentMapper;
 
   @Override
   public Page<SysStudent> listByStudent(Long currentPage, Long pageSize, String name, String gender, Integer age) {
@@ -81,4 +91,7 @@ public class SysStudentServiceImpl extends ServiceImpl<SysStudentMapper, SysStud
     }
     return page(page, queryWrapper);
   }
+
+
+
 }

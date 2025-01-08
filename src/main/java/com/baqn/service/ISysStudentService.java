@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baqn.pojo.SysStudent;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * <p>
  * 学员表 服务类
@@ -61,4 +64,5 @@ public interface ISysStudentService extends IService<SysStudent> {
    * @return 分页结果
    */
   Page<SysStudent> listByHeadteacher(Long currentPage, Long pageSize, String headteacher, String name, String gender, Integer age);
+
 }

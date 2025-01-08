@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.baqn.mapper.SysInterviewMapper">
+  <select id="selectStudentsWithoutInterview" resultType="long">
+    SELECT student_id
+    FROM sys_student
+    WHERE student_id NOT IN (
+      SELECT student_id
+      FROM sys_interview
+    )
+  </select>
+
+  <select id="selectStudentsByNameAndIds" resultType="map">
+    SELECT student_id, name
+    FROM sys_student
+    WHERE student_id IN
+    <foreach item="id" index="index" collection="studentIds" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+    AND name LIKE CONCAT('%', #{name}, '%')
+  </select>
+
+  <select id="selectStudentsByIds" resultType="map">
+    SELECT student_id, name
+    FROM sys_student
+    WHERE student_id IN
+    <foreach item="id" index="index" collection="studentIds" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </select>
+
+</mapper>

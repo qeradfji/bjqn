@@ -33,7 +33,7 @@ public class SysUserController {
   public R login(@RequestBody LoginDTO loginDTO) {
     try {
       UserResponse userResponse = iSysUserService.login(loginDTO.getUsername(), loginDTO.getPassword());
-      return R.ok().put("data", userResponse);
+      return R.ok().put("data", userResponse).put("realName", userResponse.getRealName());
     } catch (RuntimeException e) {
       return R.error(e.getMessage());
     }

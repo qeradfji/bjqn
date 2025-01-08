@@ -1,6 +1,7 @@
 package com.baqn.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baqn.pojo.SysStudent;
 import com.baqn.service.ISysStudentService;
 import com.baqn.util.R;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/sys-student")
-@Api("学员表")
+@Api(tags = "学员管理")
 public class SysStudentController {
 
   @Autowired
@@ -109,6 +110,28 @@ public class SysStudentController {
     try {
       Page<SysStudent> page = iSysStudentService.listByHeadteacher(currentPage, pageSize, headteacher, name, gender, age);
       return R.ok().put("data", page);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return R.error("查询失败: " + e.getMessage());
+    }
+  }
+
+  /**
+   * 根据ID查询学生
+   */
+  @ApiOperation("根据ID查询学生")
+  @GetMapping("/get-by-id/{studentId}")
+  public R getById(@PathVariable Long studentId) {
+    try {
+      if (studentId == null) {
+        return R.error("studentId 不能为空");
+      }
+      SysStudent student = iSysStudentService.getById(studentId);
+      if (student != null) {
+        return R.ok().put("data", student);
+      } else {
+        return R.error("学生不存在");
+      }
     } catch (Exception e) {
       e.printStackTrace();
       return R.error("查询失败: " + e.getMessage());
