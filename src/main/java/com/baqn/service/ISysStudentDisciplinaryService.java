@@ -1,16 +1,11 @@
 package com.baqn.service;
 
-import com.baqn.pojo.SysStudentDisciplinary;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.baqn.pojo.SysStudentDisciplinary;
 
-/**
- * <p>
- * 违纪表 服务类
- * </p>
- *
- * @author bao
- * @since 2025-01-04
- */
+import java.util.List;
+import java.util.Map;
+
 public interface ISysStudentDisciplinaryService extends IService<SysStudentDisciplinary> {
-
+  List<Map<String, Object>> getTypeCountByProcessor(String processor);
 }

@@ -1,6 +1,9 @@
 package com.baqn.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baqn.pojo.SysInterview;
+import com.baqn.pojo.SysStudent;
 import com.baqn.service.ISysInterviewService;
 import com.baqn.service.ISysStudentService;
 import com.baqn.util.R;
@@ -43,6 +46,24 @@ public class SysInterviewController {
     } catch (Exception e) {
       logger.error("查询没有访谈的学生失败", e);
       return R.error("查询没有访谈的学生失败");
+    }
+  }
+
+  @ApiOperation("分页查询没有访谈的学生，支持多条件查询")
+  @GetMapping("/students-without-interview-page")
+  public R getStudentsWithoutInterviewPage(
+    @RequestParam(defaultValue = "1") Integer pageNum,
+    @RequestParam(defaultValue = "10") Integer pageSize,
+    @RequestParam(required = false) String name,
+    @RequestParam(required = false) String classId,
+    @RequestParam(required = false) Long teacherId) {
+    try {
+      Page<Map<String, Object>> page = new Page<>(pageNum, pageSize);
+      Page<Map<String, Object>> resultPage = iSysInterviewService.getStudentsWithoutInterviewPage(page, name, classId, teacherId);
+      return R.ok().put("records", resultPage.getRecords()).put("total", resultPage.getTotal());
+    } catch (Exception e) {
+      logger.error("分页查询没有访谈的学生失败", e);
+      return R.error("分页查询没有访谈的学生失败");
     }
   }
 

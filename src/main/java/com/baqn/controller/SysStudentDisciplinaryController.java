@@ -12,14 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * <p>
- * 违纪表 前端控制器
- * </p>
- *
- * @author bao
- * @since 2025-01-04
- */
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/sys-student-disciplinary")
 @Api(tags = "违纪表")
@@ -129,4 +124,21 @@ public class SysStudentDisciplinaryController {
       return R.error("删除违纪记录失败");
     }
   }
+
+  /**
+   * 根据老师姓名统计不同违规类型的数量
+   */
+  @ApiOperation("根据老师姓名统计不同违规类型的数量")
+  @GetMapping("/type-count-by-processor")
+  public R getTypeCountByProcessor(@RequestParam(required = false) String processor) {
+    try {
+      List<Map<String, Object>> typeCountList = iSysStudentDisciplinaryService.getTypeCountByProcessor(processor);
+      return R.ok().put("typeCount", typeCountList);
+    } catch (Exception e) {
+      logger.error("统计违规类型数量失败", e);
+      return R.error("统计违规类型数量失败");
+    }
+  }
+
+
 }
