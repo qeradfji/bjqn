@@ -11,6 +11,9 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * <p>
  * 学员表 前端控制器
@@ -137,4 +140,21 @@ public class SysStudentController {
       return R.error("查询失败: " + e.getMessage());
     }
   }
+
+  @ApiOperation("根据班主任统计学员人数")
+  @GetMapping("/count-by-headteacher")
+  public R countByHeadteacher(@RequestParam String headteacher) {
+    try {
+      int count = Math.toIntExact(iSysStudentService.countByHeadteacher(headteacher));
+      Map<String, Object> result = new HashMap<>();
+      result.put("headteacher", headteacher);
+      result.put("studentCount", count);
+      return R.ok().put("data", result);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return R.error("统计失败: " + e.getMessage());
+    }
+  }
+
+
 }

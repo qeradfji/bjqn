@@ -4,16 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baqn.mapper.SysStudentMapper;
-import com.baqn.pojo.SysInterview;
 import com.baqn.pojo.SysStudent;
 import com.baqn.service.ISysStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -90,6 +84,13 @@ public class SysStudentServiceImpl extends ServiceImpl<SysStudentMapper, SysStud
       queryWrapper.eq("age", age);
     }
     return page(page, queryWrapper);
+  }
+
+  @Override
+  public Long countByHeadteacher(String headteacher) {
+    QueryWrapper<SysStudent> queryWrapper = new QueryWrapper<>();
+    queryWrapper.eq("headteacher", headteacher);
+    return baseMapper.selectCount(queryWrapper);
   }
 
 
