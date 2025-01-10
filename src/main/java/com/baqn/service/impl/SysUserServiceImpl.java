@@ -1,6 +1,7 @@
 package com.baqn.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baqn.pojo.SysUser;
 import com.baqn.mapper.SysUserMapper;
 import com.baqn.response.UserResponse;
@@ -9,6 +10,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -60,5 +63,28 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     // 4. 返回用户名和角色信息
     return new UserResponse(user.getUsername(), role , user.getRealName() , user.getUserId());
+  }
+
+  @Override
+  public Page<SysUser> getUsers(Page<SysUser> page) {
+    return page(page);
+  }
+
+  @Override
+  public boolean addUser(SysUser sysUser) {
+    sysUser.setCreateTime(LocalDateTime.now());
+    sysUser.setUpdateTime(LocalDateTime.now());
+    return save(sysUser);
+  }
+
+  @Override
+  public boolean updateUser(SysUser sysUser) {
+    sysUser.setUpdateTime(LocalDateTime.now());
+    return updateById(sysUser);
+  }
+
+  @Override
+  public boolean deleteUser(Long id) {
+    return removeById(id);
   }
 }
