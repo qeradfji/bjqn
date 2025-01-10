@@ -156,5 +156,17 @@ public class SysStudentController {
     }
   }
 
+  @ApiOperation("根据性别统计学员人数")
+  @GetMapping("/count-by-sex")
+  public R countBySex() {
+    try {
+      Map<String, Integer> sexCountMap = iSysStudentService.countBySex();
+      return R.ok().put("data", sexCountMap);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return R.error("统计失败: " + e.getMessage());
+    }
+  }
+
 
 }

@@ -110,5 +110,8 @@ public class SysStudent implements Serializable {
     @ApiModelProperty(value = "班级")
     private String classe;
 
+    @ApiModelProperty(value = "性别(1:男,2:女)")
+    private Integer sex;
+
 
 }

@@ -20,4 +20,6 @@ public interface SysStudentMapper extends BaseMapper<SysStudent> {
 
   @Select("SELECT student_id, name FROM sys_student WHERE student_id IN (#{studentIds})")
   List<Map<String, Object>> selectStudentNamesByIds(@Param("studentIds") List<Long> studentIds);
+
+    Integer countBySex(int i);
 }

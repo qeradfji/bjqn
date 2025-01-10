@@ -9,6 +9,9 @@ import com.baqn.service.ISysStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * <p>
  * 学员表 服务实现类
@@ -93,6 +96,13 @@ public class SysStudentServiceImpl extends ServiceImpl<SysStudentMapper, SysStud
     return baseMapper.selectCount(queryWrapper);
   }
 
+  @Override
+  public Map<String, Integer> countBySex() {
+    HashMap<String, Integer> sexCountMap = new HashMap<>();
+    sexCountMap.put("male",studentMapper.countBySex(1));
+    sexCountMap.put("female",studentMapper.countBySex(2));
+    return sexCountMap;
+  }
 
 
 }
