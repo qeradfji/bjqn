@@ -37,36 +37,6 @@ public class SysInterviewController {
   @Autowired
   private ISysStudentService iStudentService;
 
-  @ApiOperation("查询没有访谈的学生，支持多条件查询")
-  @GetMapping("/students-without-interview")
-  public R getStudentsWithoutInterview(@RequestParam(required = false) String name, @RequestParam(required = false) String classId, @RequestParam(required = false) Long teacherId) {
-    try {
-      List<Map<String, Object>> students = iSysInterviewService.getStudentsWithoutInterview(name, classId, teacherId);
-      return R.ok().put("students", students);
-    } catch (Exception e) {
-      logger.error("查询没有访谈的学生失败", e);
-      return R.error("查询没有访谈的学生失败");
-    }
-  }
-
-  @ApiOperation("分页查询没有访谈的学生，支持多条件查询")
-  @GetMapping("/students-without-interview-page")
-  public R getStudentsWithoutInterviewPage(
-    @RequestParam(defaultValue = "1") Integer pageNum,
-    @RequestParam(defaultValue = "10") Integer pageSize,
-    @RequestParam(required = false) String name,
-    @RequestParam(required = false) String classId,
-    @RequestParam(required = false) Long teacherId) {
-    try {
-      Page<Map<String, Object>> page = new Page<>(pageNum, pageSize);
-      Page<Map<String, Object>> resultPage = iSysInterviewService.getStudentsWithoutInterviewPage(page, name, classId, teacherId);
-      return R.ok().put("records", resultPage.getRecords()).put("total", resultPage.getTotal());
-    } catch (Exception e) {
-      logger.error("分页查询没有访谈的学生失败", e);
-      return R.error("分页查询没有访谈的学生失败");
-    }
-  }
-
   /**
    * 删除访谈记录
    */
@@ -123,4 +93,23 @@ public class SysInterviewController {
       return R.error("修改访谈记录失败");
     }
   }
+
+
+  /**
+   * 根据学生名字和/或老师ID模糊查询访谈记录，并关联 student、class 和 teacher 表
+   */
+  @ApiOperation("根据学生名字和/或老师ID模糊查询访谈记录，并关联 student、class 和 teacher 表")
+  @GetMapping("/list-by-student-name-and-teacher-id")
+  public R listInterviewsByStudentNameAndTeacherId(
+    @RequestParam(required = false) String studentName,
+    @RequestParam(required = false) Long teacherId,
+    @RequestParam int current,
+    @RequestParam int size) {
+    Page<SysInterview> page = new Page<>(current, size);
+    Page<SysInterview> resultPage = iSysInterviewService.getInterviewsByStudentNameAndTeacherId(studentName, teacherId, page);
+    return R.ok().put("data", resultPage);
+  }
+
+
+
 }

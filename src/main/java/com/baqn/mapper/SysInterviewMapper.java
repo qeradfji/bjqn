@@ -1,11 +1,12 @@
 package com.baqn.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baqn.pojo.SysInterview;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -16,7 +17,7 @@ import java.util.Map;
  * @since 2025-01-04
  */
 public interface SysInterviewMapper extends BaseMapper<SysInterview> {
-  List<Long> selectStudentsWithoutInterview();
-  List<Map<String, Object>> selectStudentsByNameAndIds(@Param("name") String name, @Param("studentIds") List<Long> studentIds);
-  List<Map<String, Object>> selectStudentsByIds(@Param("studentIds") List<Long> studentIds);
+
+
+  Page<SysInterview> getInterviewsByStudentNameAndTeacherId(@Param("page") Page<SysInterview> page, @Param("studentName") String studentName, @Param("teacherId") Long teacherId);
 }

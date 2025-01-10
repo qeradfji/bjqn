@@ -75,4 +75,13 @@ public class SysInterview implements Serializable {
     private Integer deleted;
 
 
+    @TableField(exist = false)
+    private String studentName;
+
+    @TableField(exist = false)
+    private String className;
+
+    @TableField(exist = false)
+    private String teacherName;
+
 }

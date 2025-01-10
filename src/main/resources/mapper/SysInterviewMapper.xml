@@ -32,4 +32,41 @@
     </foreach>
   </select>
 
+  <select id="getInterviewsByStudentNameAndTeacherId" resultType="com.baqn.pojo.SysInterview">
+    SELECT
+    si.interview_id,
+    si.student_id,
+    ss.name AS student_name,
+    si.class_id,
+    sc.name AS class_name,
+    si.teacher_id,
+    su.real_name AS teacher_name,
+    si.interview_date,
+    si.interview_type,
+    si.content,
+    si.feedback,
+    si.status,
+    si.create_by,
+    si.update_by,
+    si.create_time,
+    si.update_time,
+    si.deleted
+    FROM
+    sys_interview si
+    LEFT JOIN
+    sys_student ss ON si.student_id = ss.student_id
+    LEFT JOIN
+    sys_class sc ON si.class_id = sc.class_id
+    LEFT JOIN
+    sys_user su ON si.teacher_id = su.user_id
+    <where>
+      <if test="studentName != null and studentName != ''">
+        AND ss.name LIKE CONCAT('%', #{studentName}, '%')
+      </if>
+      <if test="teacherId != null">
+        AND si.teacher_id = #{teacherId}
+      </if>
+    </where>
+  </select>
+
 </mapper>
