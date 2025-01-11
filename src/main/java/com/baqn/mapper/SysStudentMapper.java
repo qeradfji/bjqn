@@ -22,4 +22,7 @@ public interface SysStudentMapper extends BaseMapper<SysStudent> {
   List<Map<String, Object>> selectStudentNamesByIds(@Param("studentIds") List<Long> studentIds);
 
     Integer countBySex(int i);
+
+
+
 }

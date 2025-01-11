@@ -90,19 +90,19 @@ public class SysStudentServiceImpl extends ServiceImpl<SysStudentMapper, SysStud
     return page(page, queryWrapper);
   }
 
-
   @Override
   public Long countByHeadteacher(String headteacher) {
     QueryWrapper<SysStudent> queryWrapper = new QueryWrapper<>();
     queryWrapper.eq("headteacher", headteacher);
+    queryWrapper.eq("delete", 0); // 过滤已删除的学生
     return baseMapper.selectCount(queryWrapper);
   }
 
   @Override
   public Map<String, Integer> countBySex() {
     HashMap<String, Integer> sexCountMap = new HashMap<>();
-    sexCountMap.put("male",studentMapper.countBySex(1));
-    sexCountMap.put("female",studentMapper.countBySex(2));
+    sexCountMap.put("male", studentMapper.countBySex(1));
+    sexCountMap.put("female", studentMapper.countBySex(2));
     return sexCountMap;
   }
 
@@ -154,7 +154,4 @@ public class SysStudentServiceImpl extends ServiceImpl<SysStudentMapper, SysStud
     queryWrapper.eq("status", status);
     return baseMapper.selectCount(queryWrapper);
   }
-
-
-
 }

@@ -43,18 +43,10 @@ public class SysInterviewController {
   @ApiOperation("删除访谈记录")
   @DeleteMapping("/delete/{interviewId}")
   public R deleteInterview(@PathVariable Long interviewId) {
-    try {
-      boolean result = iSysInterviewService.removeById(interviewId);
-      if (result) {
-        return R.ok("删除成功");
-      } else {
-        return R.error("删除失败");
-      }
-    } catch (Exception e) {
-      logger.error("删除访谈记录失败", e);
-      return R.error("删除访谈记录失败");
-    }
+    boolean result = iSysInterviewService.removeById(interviewId);
+    return result ? R.ok("删除成功") : R.error("删除失败");
   }
+
 
   /**
    * 添加访谈记录
