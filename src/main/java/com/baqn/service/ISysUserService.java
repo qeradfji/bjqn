@@ -24,11 +24,12 @@ public interface ISysUserService extends IService<SysUser> {
   UserResponse login(String username, String password);
 
   /**
-   * 分页查询用户
+   * 根据 real_name 模糊查询用户并支持分页
    * @param page
+   * @param realName
    * @return
    */
-  Page<SysUser> getUsers(Page<SysUser> page);
+  Page<SysUser> getUsersByRealName(Page<SysUser> page, String realName);
 
   /**
    * 添加用户
@@ -45,9 +46,11 @@ public interface ISysUserService extends IService<SysUser> {
   boolean updateUser(SysUser sysUser);
 
   /**
-   * 删除用户
+   * 删除用户（逻辑删除）
    * @param id
    * @return
    */
   boolean deleteUser(Long id);
+
+
 }

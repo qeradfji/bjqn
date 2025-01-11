@@ -1,5 +1,6 @@
 package com.baqn.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -71,8 +72,9 @@ public class SysUser implements Serializable {
     @ApiModelProperty(value = "更新时间")
     private LocalDateTime updateTime;
 
+    @TableLogic // 使用逻辑删除
     @ApiModelProperty(value = "是否删除(0:未删除,1:已删除)")
-    private Boolean deleted;
+    private int deleted;
 
 
 }

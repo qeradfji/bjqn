@@ -82,18 +82,15 @@ public class SysClassController {
     }
   }
 
-  @ApiOperation("分页查询班级信息")
-  @GetMapping("/list")
-  public R list(
-    @ApiParam("当前页码") @RequestParam(defaultValue = "1") int current,
-    @ApiParam("每页大小") @RequestParam(defaultValue = "10") int size) {
-    try {
-      Page<SysClass> page = new Page<>(current, size);
-      Page<SysClass> sysClassPage = iSysClassService.page(page);
-      return R.ok().put("data", sysClassPage);
-    } catch (Exception e) {
-      e.printStackTrace();
-      return R.error("查询失败: " + e.getMessage());
-    }
+  @ApiOperation("分页查询班级并且可以根据name值进行模糊查询")
+  @GetMapping("/page-by-name")
+  public R getClassesByName(
+    @RequestParam int current,
+    @RequestParam int size,
+    @RequestParam(required = false) String name) {
+    Page<SysClass> page = new Page<>(current, size);
+    Page<SysClass> classPage = iSysClassService.getClassesByName(page, name);
+    return R.ok().put("data", classPage);
   }
+
 }

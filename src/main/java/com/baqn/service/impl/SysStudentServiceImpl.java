@@ -73,12 +73,11 @@ public class SysStudentServiceImpl extends ServiceImpl<SysStudentMapper, SysStud
 
   @Override
   public Page<SysStudent> listByHeadteacher(Long currentPage, Long pageSize, String headteacher, String name, String gender, Integer age) {
-    if (headteacher == null || headteacher.isEmpty()) {
-      throw new IllegalArgumentException("headteacher cannot be null or empty");
-    }
     Page<SysStudent> page = new Page<>(currentPage, pageSize);
     QueryWrapper<SysStudent> queryWrapper = new QueryWrapper<>();
-    queryWrapper.eq("headteacher", headteacher);
+    if (headteacher != null && !headteacher.isEmpty()) {
+      queryWrapper.eq("headteacher", headteacher);
+    }
     if (name != null && !name.isEmpty()) {
       queryWrapper.like("name", name);
     }
@@ -90,6 +89,7 @@ public class SysStudentServiceImpl extends ServiceImpl<SysStudentMapper, SysStud
     }
     return page(page, queryWrapper);
   }
+
 
   @Override
   public Long countByHeadteacher(String headteacher) {
@@ -146,6 +146,13 @@ public class SysStudentServiceImpl extends ServiceImpl<SysStudentMapper, SysStud
     result.put("failCount", failCount);
     result.put("failList", failList);
     return result;
+  }
+
+  @Override
+  public long countByStatus(Integer status) {
+    QueryWrapper<SysStudent> queryWrapper = new QueryWrapper<>();
+    queryWrapper.eq("status", status);
+    return baseMapper.selectCount(queryWrapper);
   }
 
 

@@ -65,10 +65,24 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     return new UserResponse(user.getUsername(), role , user.getRealName() , user.getUserId());
   }
 
+
+  /**
+   * 根据 real_name 模糊查询用户并支持分页
+   *
+   * @param page
+   * @param realName
+   * @return
+   */
   @Override
-  public Page<SysUser> getUsers(Page<SysUser> page) {
-    return page(page);
+  public Page<SysUser> getUsersByRealName(Page<SysUser> page, String realName) {
+    QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
+    if (realName != null && !realName.isEmpty()) {
+      queryWrapper.like("real_name", realName);
+    }
+    return page(page, queryWrapper);
   }
+
+
 
   @Override
   public boolean addUser(SysUser sysUser) {
@@ -85,6 +99,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
   @Override
   public boolean deleteUser(Long id) {
-    return removeById(id);
+    if (id == null) {
+      throw new IllegalArgumentException("user_id cannot be null");
+    }
+    return removeById(id); // 直接物理删除
   }
+
 }

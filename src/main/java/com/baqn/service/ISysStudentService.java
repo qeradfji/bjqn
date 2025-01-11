@@ -79,4 +79,6 @@ public interface ISysStudentService extends IService<SysStudent> {
    * @return
    */
   Map<String, Object> importStudents(List<SysStudent> studentList);
+
+  long countByStatus(Integer status);
 }

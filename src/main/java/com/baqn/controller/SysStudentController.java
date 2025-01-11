@@ -107,7 +107,7 @@ public class SysStudentController {
   public R listByHeadteacher(
     @RequestParam(defaultValue = "1") Long currentPage,
     @RequestParam(defaultValue = "10") Long pageSize,
-    @RequestParam String headteacher,
+    @RequestParam(required = false) String headteacher, // 修改这里
     @RequestParam(required = false) String name,
     @RequestParam(required = false) String gender,
     @RequestParam(required = false) Integer age) {
@@ -119,6 +119,21 @@ public class SysStudentController {
       return R.error("查询失败: " + e.getMessage());
     }
   }
+
+
+
+  @ApiOperation("根据状态统计学生人数")
+  @GetMapping("/count-all")
+  public R countByStatus(@RequestParam(defaultValue = "1") Integer status) {
+    try {
+      long count = iSysStudentService.countByStatus(status);
+      return R.ok().put("data", count);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return R.error("查询失败: " + e.getMessage());
+    }
+  }
+
 
   /**
    * 根据ID查询学生

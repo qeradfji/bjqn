@@ -38,13 +38,42 @@ public class SysUserController {
     }
   }
 
-  @ApiOperation("分页查询用户")
-  @GetMapping("/page")
-  public R getUsers(@RequestParam int current, @RequestParam int size) {
+  /*
+  根据id查询用户
+   */
+  @ApiOperation("根据ID查询用户")
+  @GetMapping("/get-by-id/{userId}")
+  public R getById(@PathVariable Long userId) {
+    try {
+      if (userId == null) {
+        return R.error("userId 不能为空");
+      }
+      SysUser user = iSysUserService.getById(userId);
+      if (user != null) {
+        return R.ok().put("data", user);
+      } else {
+        return R.error("用户不存在");
+      }
+   } catch (Exception e) {
+      e.printStackTrace();
+      return R.error("查询失败: " + e.getMessage());
+    }
+  }
+
+
+
+  @ApiOperation("根据 real_name 模糊查询用户并支持分页")
+  @GetMapping("/page-by-real-name")
+  public R getUsersByRealName(
+    @RequestParam int current,
+    @RequestParam int size,
+    @RequestParam(required = false) String realName) {
     Page<SysUser> page = new Page<>(current, size);
-    Page<SysUser> userPage = iSysUserService.getUsers(page);
+    Page<SysUser> userPage = iSysUserService.getUsersByRealName(page, realName);
     return R.ok().put("data", userPage);
   }
+
+
 
   @ApiOperation("添加用户")
   @PostMapping("/add")
@@ -68,7 +97,7 @@ public class SysUserController {
     }
   }
 
-  @ApiOperation("删除用户")
+  @ApiOperation("删除用户（逻辑删除）")
   @DeleteMapping("/delete/{id}")
   public R deleteUser(@PathVariable Long id) {
     boolean result = iSysUserService.deleteUser(id);
@@ -78,4 +107,6 @@ public class SysUserController {
       return R.error("用户删除失败");
     }
   }
+
+
 }
