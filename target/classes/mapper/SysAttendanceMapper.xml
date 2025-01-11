@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.baqn.mapper.SysAttendanceMapper">
+  <select id="selectPage" resultType="com.baqn.pojo.SysAttendance">
+    SELECT sa.*, sc.name AS class_name
+    FROM sys_attendance sa
+    LEFT JOIN sys_class sc ON sa.class_id = sc.class_id
+    <where>
+      <if test="ew != null and ew.sqlSegment != null">
+        ${ew.sqlSegment}
+      </if>
+    </where>
+  </select>
+</mapper>

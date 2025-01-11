@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -167,6 +168,19 @@ public class SysStudentController {
       return R.error("统计失败: " + e.getMessage());
     }
   }
+
+  @ApiOperation("批量导入学生数据")
+  @PostMapping("/import")
+  public R importStudents(@RequestBody List<SysStudent> studentList) {
+    try {
+      Map<String, Object> importResult = iSysStudentService.importStudents(studentList);
+      return R.ok().put("data", importResult);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return R.error("导入失败: " + e.getMessage());
+    }
+  }
+
 
 
 }

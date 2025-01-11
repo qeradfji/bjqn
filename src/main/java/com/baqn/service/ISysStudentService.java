@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baqn.pojo.SysStudent;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -71,4 +72,11 @@ public interface ISysStudentService extends IService<SysStudent> {
    * @return
    */
   Map<String, Integer> countBySex();
+
+  /**
+   * 批量导入学员信息
+   * @param studentList
+   * @return
+   */
+  Map<String, Object> importStudents(List<SysStudent> studentList);
 }

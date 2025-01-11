@@ -9,7 +9,9 @@ import com.baqn.service.ISysStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -103,6 +105,49 @@ public class SysStudentServiceImpl extends ServiceImpl<SysStudentMapper, SysStud
     sexCountMap.put("female",studentMapper.countBySex(2));
     return sexCountMap;
   }
+
+  /**
+   * 批量导入学员信息
+   *
+   * @param studentList
+   * @return
+   */
+  @Override
+  public Map<String, Object> importStudents(List<SysStudent> studentList) {
+    int successCount = 0;
+    int failCount = 0;
+    List<SysStudent> failList = new ArrayList<>();
+
+    for (SysStudent student : studentList) {
+      try {
+        // 进行数据校验
+        if (student.getStudentNo() == null || student.getName() == null) {
+          failList.add(student);
+          failCount++;
+          continue;
+        }
+
+        // 保存学生数据
+        boolean result = saveStudent(student);
+        if (result) {
+          successCount++;
+        } else {
+          failList.add(student);
+          failCount++;
+        }
+      } catch (Exception e) {
+        failList.add(student);
+        failCount++;
+      }
+    }
+
+    Map<String, Object> result = new HashMap<>();
+    result.put("successCount", successCount);
+    result.put("failCount", failCount);
+    result.put("failList", failList);
+    return result;
+  }
+
 
 
 }
