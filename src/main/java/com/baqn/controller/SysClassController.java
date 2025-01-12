@@ -18,6 +18,20 @@ public class SysClassController {
   @Autowired
   private ISysClassService iSysClassService;
 
+  /*
+  统计班级数量
+   */
+  @ApiOperation("统计班级数量")
+  @GetMapping("/count")
+  public R count() {
+    try {
+      long count = iSysClassService.count();
+      return R.ok().put("data", count);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return R.error("查询失败: " + e.getMessage());
+    }
+  }
   @ApiOperation("根据ID查询班级信息")
   @GetMapping("/get-by-id/{classId}")
   public R getById(@PathVariable Long classId) {

@@ -22,4 +22,9 @@ public class SysDepartmentServiceImpl extends ServiceImpl<SysDepartmentMapper, S
   public Page<SysDepartment> getDepartments(Page<SysDepartment> page) {
     return page(page);
   }
+
+  @Override
+  public long getDepartmentCount() {
+    return this.count();
+  }
 }

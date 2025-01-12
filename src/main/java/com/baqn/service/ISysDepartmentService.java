@@ -14,4 +14,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ISysDepartmentService extends IService<SysDepartment> {
   Page<SysDepartment> getDepartments(Page<SysDepartment> page);
+
+  long getDepartmentCount();
 }

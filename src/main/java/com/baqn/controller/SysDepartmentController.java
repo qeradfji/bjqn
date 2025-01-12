@@ -1,14 +1,13 @@
 package com.baqn.controller;
 
-
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baqn.pojo.SysDepartment;
-import com.baqn.service.ISysDepartmentService;
-import com.baqn.util.R;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+  import com.baqn.pojo.SysDepartment;
+  import com.baqn.service.ISysDepartmentService;
+  import com.baqn.util.R;
+  import io.swagger.annotations.Api;
+  import io.swagger.annotations.ApiOperation;
+  import org.springframework.beans.factory.annotation.Autowired;
+  import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -54,4 +53,10 @@ public class SysDepartmentController {
     return result ? R.ok("添加成功") : R.error("添加失败");
   }
 
+  @ApiOperation("统计部门数量")
+  @GetMapping("/count")
+  public R getDepartmentCount() {
+    long count = iSysDepartmentService.getDepartmentCount();
+    return R.ok().put("count", count);
+  }
 }
